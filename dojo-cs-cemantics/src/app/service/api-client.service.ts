@@ -11,6 +11,11 @@ export class ApiClientService {
   private httpClient = inject(HttpClient);
 
   public getPokemonValue(guess: GuessWord): Observable<ResponseWord>{
-    return this.httpClient.get<ResponseWord>(`https://pokeapi.co/api/v2/pokemon/${guess}`)
+    const requestBody = {
+      word1: "centrale",
+      word2: guess.value
+    };
+    
+    return this.httpClient.post<ResponseWord>(`https://tp-devops-4mpxr1erjxcm.macbucheron1.deno.net/similarity`, requestBody);
   }
 }

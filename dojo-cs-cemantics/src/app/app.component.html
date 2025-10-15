@@ -13,9 +13,11 @@
     <label>Mouais... 🥱</label>
   } @else if (myResultDistance < 75) {
     <label>Tu tiens un truc ! 😳</label>
-  } @else if (myResultDistance < 100) {
+  } @else if (myResultDistance < 95) {
     <label>Si proche du but ! 🔥</label>
-  } @else {
+  } @else if (myResultDistance >= 95) {
     <label>Félicitations ! 🎉</label>
+  } @else {
+    <label>Essaye un mot ! 🤔</label>
   }
 </div>

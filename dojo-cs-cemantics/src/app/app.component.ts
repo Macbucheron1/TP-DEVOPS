@@ -24,7 +24,7 @@ export class AppComponent {
   myResultDistance = 0
 
   sendMyGuess() {
-    this.myResultDistance = 45
+    this.myResultDistance = 0; // Réinitialiser pendant la requête
     this.apiClient.getPokemonValue({
       value: this.myGuess
     }).pipe(
@@ -35,7 +35,8 @@ export class AppComponent {
       })
     ).subscribe(result=> {
       this.hasError = false;
-      this.myResultDistance = result.value
+      // Convertir la valeur de similarité (0-1) en pourcentage (0-100)
+      this.myResultDistance = Math.round(result.value * 100);
     });
   }
 }

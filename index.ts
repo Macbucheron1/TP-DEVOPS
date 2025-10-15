@@ -10,15 +10,18 @@ function handlePreFlightRequest(): Response {
 
 async function handler(_req: Request): Promise<Response> {
   if (_req.method == "OPTIONS") {
-    handlePreFlightRequest();
+    return handlePreFlightRequest();
   }
 
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
 
+  // Lire le body de la requête pour récupérer les mots
+  const requestBody = await _req.json();
+  
   const similarityRequestBody = JSON.stringify({
-    word1: "centrale",
-    word2: "supelec",
+    word1: requestBody.word1 || "centrale",
+    word2: requestBody.word2 || "supelec",
   });
 
   const requestOptions = {
