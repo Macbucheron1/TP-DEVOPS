@@ -10,14 +10,26 @@ function handlePreFlightRequest(): Response {
 
 async function handler(_req: Request): Promise<Response> {
   if (_req.method == "OPTIONS") {
-    handlePreFlightRequest();
+    return handlePreFlightRequest();
   }
 
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
 
   // Lire le body de la requête pour récupérer les mots
-  const requestBody = await _req.json();
+  let requestBody;
+  try {
+    requestBody = await _req.json();
+  } catch (error) {
+    return new Response("Invalid JSON in request body", {
+      status: 400,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "content-type",
+      },
+    });
+  }
   
   const similarityRequestBody = JSON.stringify({
     word1: requestBody.word1 || "centrale",
@@ -28,7 +40,7 @@ async function handler(_req: Request): Promise<Response> {
     method: "POST",
     headers: headers,
     body: similarityRequestBody,
-    redirect: "follow",
+    redirect: "follow" as RequestRedirect,
   };
 
   try {
@@ -59,7 +71,15 @@ async function handler(_req: Request): Promise<Response> {
     });
   } catch (error) {
     console.error("Fetch error:", error);
-    return new Response(`Error: ${error.message}`, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return new Response(`Error: ${errorMessage}`, { 
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "content-type",
+      },
+    });
   }
 }
 
